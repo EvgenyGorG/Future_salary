@@ -26,6 +26,24 @@ def get_number_of_vacancies_in_programming_languages(
     return number_of_vacancies_in_programming_languages
 
 
+def get_salaries_of_the_desired_programming_language(
+        programmer_specialization, vacancies_url, vacancy_parameters
+):
+    salaries_of_the_desired_programming_language = []
+
+    vacancy_parameters['text'] = programmer_specialization
+    vacancy_parameters['only_with_salary'] = True
+
+    vacancies = requests.get(vacancies_url, params=vacancy_parameters)
+    vacancies.raise_for_status()
+    vacancies = vacancies.json()
+
+    for vacancy in vacancies['items']:
+        salaries_of_the_desired_programming_language.append(vacancy['salary'])
+
+    return salaries_of_the_desired_programming_language
+
+
 def main():
     vacancies_url = 'https://api.hh.ru/vacancies'
 
@@ -40,11 +58,19 @@ def main():
         'Python', 'Java', 'JavaScript'
     ]
 
+    programmer_specialization = 'Программист Python'
+
     actual_vacancies = get_require_vacancies(vacancies_url, vacancy_parameters)
 
     number_of_vacancies_in_programming_languages = (
         get_number_of_vacancies_in_programming_languages(
             programming_languages, vacancies_url, vacancy_parameters
+        )
+    )
+
+    salaries_of_the_desired_programming_language = (
+        get_salaries_of_the_desired_programming_language(
+            programmer_specialization, vacancies_url, vacancy_parameters
         )
     )
 
