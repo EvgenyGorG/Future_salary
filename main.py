@@ -4,15 +4,7 @@ from pprint import pprint
 import requests
 
 
-def get_require_vacancies(vacancies_url, programmer_specialization):
-    vacancy_parameters = {
-        'professional_role': 96,
-        'area': 1,
-        'period': 30,
-        'text': programmer_specialization,
-        'only_with_salary': True
-    }
-
+def get_require_vacancies(vacancies_url, vacancy_parameters):
     vacancies = requests.get(vacancies_url, params=vacancy_parameters)
     vacancies.raise_for_status()
 
@@ -20,15 +12,8 @@ def get_require_vacancies(vacancies_url, programmer_specialization):
 
 
 def get_number_of_vacancies_in_programming_languages(
-        programming_languages, vacancies_url
+        programming_languages, vacancies_url, vacancy_parameters
 ):
-    vacancy_parameters = {
-        'professional_role': 96,
-        'area': 1,
-        'period': 30,
-        'text': ''
-    }
-
     number_of_vacancies_in_programming_languages = {}
 
     for programming_language in programming_languages:
@@ -44,16 +29,9 @@ def get_number_of_vacancies_in_programming_languages(
 
 
 def get_salaries_of_the_desired_programming_language(
-        programmer_specialization, vacancies_url
+        programmer_specialization, vacancies_url, vacancy_parameters
 ):
-    vacancy_parameters = {
-        'professional_role': 96,
-        'area': 1,
-        'period': 30,
-        'text': programmer_specialization,
-        'only_with_salary': True
-    }
-
+    vacancy_parameters['text'] = programmer_specialization
     salaries_of_the_desired_programming_language = []
 
     vacancies = requests.get(vacancies_url, params=vacancy_parameters)
@@ -66,17 +44,14 @@ def get_salaries_of_the_desired_programming_language(
     return salaries_of_the_desired_programming_language
 
 
-def get_predict_rub_salary(vacancy):
-    salary_info = vacancy['salary']
-
-    if salary_info['currency'] != 'RUR':
-        return None
-
-    else:
-
-
-
 def main():
+    vacancy_parameters = {
+        'professional_role': 96,
+        'area': 1,
+        'period': 30,
+        'text': ''
+    }
+
     vacancies_url = 'https://api.hh.ru/vacancies'
 
     programming_languages = [
@@ -86,22 +61,7 @@ def main():
 
     programmer_specialization = 'Программист Python'
 
-    actual_vacancies = get_require_vacancies(vacancies_url, programmer_specialization)
-
-    number_of_vacancies_in_programming_languages = (
-        get_number_of_vacancies_in_programming_languages(
-            programming_languages, vacancies_url
-        )
-    )
-
-    salaries_of_the_desired_programming_language = (
-        get_salaries_of_the_desired_programming_language(
-            programmer_specialization, vacancies_url
-        )
-    )
-
-    pprint(actual_vacancies)
-
+    pprint(get_salaries_of_the_desired_programming_language(programmer_specialization, vacancies_url, vacancy_parameters))
 
 if __name__ == '__main__':
     main()
