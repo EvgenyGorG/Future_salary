@@ -4,7 +4,15 @@ from pprint import pprint
 import requests
 
 
-def get_require_vacancies(vacancies_url, vacancy_parameters):
+def get_require_vacancies(vacancies_url, programming_language):
+    vacancy_parameters = {
+        'professional_role': 96,
+        'area': 1,
+        'period': 30,
+        'only_with_salary': True,
+        'text': f'Программист {programming_language}'
+    }
+
     vacancies = requests.get(vacancies_url, params=vacancy_parameters)
     vacancies.raise_for_status()
 
@@ -12,8 +20,15 @@ def get_require_vacancies(vacancies_url, vacancy_parameters):
 
 
 def get_number_of_vacancies_in_programming_languages(
-        programming_languages, vacancies_url, vacancy_parameters
+        programming_languages, vacancies_url
 ):
+    vacancy_parameters = {
+        'professional_role': 96,
+        'area': 1,
+        'period': 30,
+        'text': ''
+    }
+
     number_of_vacancies_in_programming_languages = {}
 
     for programming_language in programming_languages:
@@ -28,10 +43,15 @@ def get_number_of_vacancies_in_programming_languages(
     return number_of_vacancies_in_programming_languages
 
 
-def get_salaries_of_the_desired_programming_language(
-        programmer_specialization, vacancies_url, vacancy_parameters
-):
-    vacancy_parameters['text'] = programmer_specialization
+def get_salaries_of_the_desired_programming_language(vacancies_url):
+    vacancy_parameters = {
+        'professional_role': 96,
+        'area': 1,
+        'period': 30,
+        'only_with_salary': True,
+        'text': 'Программист Python'
+    }
+
     salaries_of_the_desired_programming_language = []
 
     vacancies = requests.get(vacancies_url, params=vacancy_parameters)
@@ -60,14 +80,6 @@ def predict_rub_salary(vacancy):
 
 
 def main():
-    vacancy_parameters = {
-        'professional_role': 96,
-        'area': 1,
-        'period': 30,
-        'only_with_salary': True,
-        'text': 'Программист Python'
-    }
-
     vacancies_url = 'https://api.hh.ru/vacancies'
 
     programming_languages = [
@@ -75,12 +87,31 @@ def main():
         'Python', 'Java', 'JavaScript'
     ]
 
-    programmer_specialization = 'Программист Python'
+    number_of_vacancies_in_programming_languages = (
+        get_number_of_vacancies_in_programming_languages(
+            programming_languages, vacancies_url
+        )
+    )
 
-    actual_vacancies = get_require_vacancies(vacancies_url, vacancy_parameters)
+    average_salary_by_language = {}
 
-    for vacancy in actual_vacancies:
-        pprint(predict_rub_salary(vacancy))
+    for programming_language in programming_languages:
+        actual_vacancies = get_require_vacancies(vacancies_url, programming_language)
+
+        predict_rub_salaries = []
+
+        for vacancy in actual_vacancies:
+            if predict_rub_salary(vacancy):
+                predict_rub_salaries.append(predict_rub_salary(vacancy))
+
+        average_salary_by_language[programming_language] = {
+            'vacancies_found': number_of_vacancies_in_programming_languages[programming_language],
+            'vacancies_processed': len(predict_rub_salaries),
+            'average_salary': int(sum(predict_rub_salaries) / len(predict_rub_salaries))
+        }
+
+
+    pprint(average_salary_by_language)
 
 
 if __name__ == '__main__':
