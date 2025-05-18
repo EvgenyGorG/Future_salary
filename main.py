@@ -4,19 +4,20 @@ from pprint import pprint
 import requests
 
 
-def get_require_vacancies(vacancies_url, programming_language):
+def get_require_vacancies(vacancies_url, programming_language, page):
     vacancy_parameters = {
         'professional_role': 96,
         'area': 1,
         'period': 30,
         'only_with_salary': True,
-        'text': f'Программист {programming_language}'
+        'text': f'Программист {programming_language}',
+        'page': {page}
     }
 
     vacancies = requests.get(vacancies_url, params=vacancy_parameters)
     vacancies.raise_for_status()
 
-    return vacancies.json()['items']
+    return vacancies.json()
 
 
 def get_number_of_vacancies_in_programming_languages(
@@ -96,11 +97,20 @@ def main():
     average_salary_by_language = {}
 
     for programming_language in programming_languages:
-        actual_vacancies = get_require_vacancies(vacancies_url, programming_language)
+        page = 0
+        pages = 1
+
+        all_vacancies = []
+
+        while page < pages:
+            actual_vacancies = get_require_vacancies(vacancies_url, programming_language, page)
+            pages = actual_vacancies['pages']
+            page += 1
+            all_vacancies += actual_vacancies['items']
 
         predict_rub_salaries = []
 
-        for vacancy in actual_vacancies:
+        for vacancy in all_vacancies:
             if predict_rub_salary(vacancy):
                 predict_rub_salaries.append(predict_rub_salary(vacancy))
 
