@@ -14,13 +14,17 @@ def main():
     headers = {
         'X-Api-App-Id': super_job_secret_key
     }
+    params = {
+        'town': 4,
+        'catalogues': 48
+    }
 
-    super_job_vacancies = requests.get(super_job_api_url, headers=headers)
+    super_job_vacancies = requests.get(super_job_api_url, headers=headers, params=params)
     super_job_vacancies.raise_for_status()
     super_job_vacancies = super_job_vacancies.json()
 
     for vacancy in super_job_vacancies['objects']:
-        pprint(vacancy['profession'])
+        print(f'{vacancy['profession']}, {vacancy['town']['title']}')
 
 
 if __name__ == '__main__':
