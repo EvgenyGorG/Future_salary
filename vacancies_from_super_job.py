@@ -6,6 +6,21 @@ import requests
 from dotenv import load_dotenv
 
 
+def predict_rub_salary_for_super_job(vacancy):
+    currency = vacancy['currency']
+    min_salary = vacancy['payment_from']
+    max_salary = vacancy['payment_to']
+
+    if currency != 'rub' or (not min_salary and not max_salary):
+        return None
+    if min_salary and max_salary:
+        return (min_salary + max_salary) / 2
+    elif min_salary:
+        return min_salary * 1.2
+    else:
+        return max_salary * 0.8
+
+
 def main():
     load_dotenv()
     super_job_secret_key = os.environ['SUPER_JOB_SECRET_KEY']
@@ -24,7 +39,11 @@ def main():
     super_job_vacancies = super_job_vacancies.json()
 
     for vacancy in super_job_vacancies['objects']:
-        print(f'{vacancy['profession']}, {vacancy['town']['title']}')
+        print(
+            f'{vacancy['profession']}, '
+            f'{vacancy['town']['title']}, '
+            f'{predict_rub_salary_for_super_job(vacancy)}'
+        )
 
 
 if __name__ == '__main__':
