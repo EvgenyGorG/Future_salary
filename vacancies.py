@@ -154,25 +154,40 @@ def search_vacancies_from_sj():
     return average_salaries_by_languages
 
 
-def create_table(table_data):
-    title = 'HeadHunter Moscow'
+def create_table(job_statistic, title):
+    table_data = [
+        (
+            'Язык программирования',
+            'Вакансий найдено',
+            'Вакансий обработано',
+            'Средняя зарплата'
+        )
+    ]
 
-    TABLE_DATA = (
-        ('Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата'),
-        ('Mk5', '2007-2009', 'The Golf Mk5 Variant was\nintroduced in 2007.'),
-        ('MKVI', '2009-2013', 'Might actually be Mk5.'),
-    )
+    for language in job_statistic:
+        table_data.append(
+            (
+                language,
+                job_statistic[language]['vacancies_found'],
+                job_statistic[language]['vacancies_processed'],
+                job_statistic[language]['average_salary']
+            )
+        )
+
+    table_instance = AsciiTable(table_data, title)
+
+    return table_instance.table
 
 
 def main():
-    """Main function."""
-    title = 'Jetta SportWagen'
+    hh_job_statistic = search_vacancies_from_hh()
+    sj_job_statistic = search_vacancies_from_sj()
 
-    # AsciiTable.
-    table_instance = AsciiTable(TABLE_DATA, title)
-    table_instance.justify_columns[2] = 'right'
-    print(table_instance.table)
-    print()
+    hh_title = 'HeadHunter Moscow'
+    sj_title = 'SuperJob Moscow'
+
+    print(create_table(hh_job_statistic, hh_title))
+    print(create_table(sj_job_statistic, sj_title))
 
 
 if __name__ == '__main__':
