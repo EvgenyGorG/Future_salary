@@ -37,13 +37,8 @@ def predict_rub_salary_sj(vacancy):
         return predict_rub_salary(salary_from, salary_to)
 
 
-def search_vacancies_from_hh():
+def search_vacancies_from_hh(programming_languages):
     hh_vacancies_url = 'https://api.hh.ru/vacancies'
-
-    programming_languages = [
-        'GO', 'C', 'C#', 'C++', 'PHP', 'Ruby',
-        'Python', 'Java', 'JavaScript', 'Kotlin'
-    ]
 
     average_salaries_by_languages = {}
 
@@ -92,7 +87,7 @@ def search_vacancies_from_hh():
     return average_salaries_by_languages
 
 
-def search_vacancies_from_sj():
+def search_vacancies_from_sj(programming_languages):
     load_dotenv()
     super_job_secret_key = os.environ['SUPER_JOB_SECRET_KEY']
 
@@ -101,11 +96,6 @@ def search_vacancies_from_sj():
     headers = {
         'X-Api-App-Id': super_job_secret_key
     }
-
-    programming_languages = [
-        'GO', 'C', 'C#', 'C++', 'PHP', 'Ruby',
-        'Python', 'Java', 'JavaScript', 'Kotlin'
-    ]
 
     average_salaries_by_languages = {}
 
@@ -179,8 +169,13 @@ def create_table(job_statistic, title):
 
 
 def main():
-    hh_job_statistic = search_vacancies_from_hh()
-    sj_job_statistic = search_vacancies_from_sj()
+    programming_languages = [
+        'GO', 'C', 'C#', 'C++', 'PHP', 'Ruby',
+        'Python', 'Java', 'JavaScript', 'Kotlin'
+    ]
+
+    hh_job_statistic = search_vacancies_from_hh(programming_languages)
+    sj_job_statistic = search_vacancies_from_sj(programming_languages)
 
     hh_title = 'HeadHunter Moscow'
     sj_title = 'SuperJob Moscow'
