@@ -56,7 +56,6 @@ def search_vacancies_from_hh(programming_languages):
                 'professional_role': profession,
                 'area': moscow_city,
                 'period': number_of_days,
-                'only_with_salary': True,
                 'text': f'Программист {programming_language}',
                 'page': page
             }
@@ -73,7 +72,7 @@ def search_vacancies_from_hh(programming_languages):
         predict_rub_salaries = []
 
         for vacancy in all_hh_vacancies_by_specific_language:
-            if predict_rub_salary_hh(vacancy):
+            if vacancy['salary'] and predict_rub_salary_hh(vacancy):
                 predict_rub_salaries.append(predict_rub_salary_hh(vacancy))
 
         if predict_rub_salaries:
