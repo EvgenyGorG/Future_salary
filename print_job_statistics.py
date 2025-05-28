@@ -37,6 +37,10 @@ def predict_rub_salary_sj(vacancy):
 
 
 def search_vacancies_from_hh(programming_languages):
+    moscow_city = 1
+    number_of_days = 30
+    profession = 96
+
     hh_vacancies_url = 'https://api.hh.ru/vacancies'
 
     average_salaries_by_languages = {}
@@ -49,9 +53,9 @@ def search_vacancies_from_hh(programming_languages):
 
         while page < pages:
             hh_vacancy_parameters = {
-                'professional_role': 96,
-                'area': 1,
-                'period': 30,
+                'professional_role': profession,
+                'area': moscow_city,
+                'period': number_of_days,
                 'only_with_salary': True,
                 'text': f'Программист {programming_language}',
                 'page': page
@@ -87,6 +91,10 @@ def search_vacancies_from_hh(programming_languages):
 
 
 def search_vacancies_from_sj(programming_languages):
+    moscow_city = 4
+    number_of_days = 30
+    profession = 48
+
     load_dotenv()
     super_job_secret_key = os.environ['SUPER_JOB_SECRET_KEY']
 
@@ -106,9 +114,9 @@ def search_vacancies_from_sj(programming_languages):
 
         while more:
             sj_vacancy_params = {
-                'town': 4,
-                'catalogues': 48,
-                'period': 30,
+                'town': moscow_city,
+                'catalogues': profession,
+                'period': number_of_days,
                 'page': page,
                 'keyword': programming_language
             }
