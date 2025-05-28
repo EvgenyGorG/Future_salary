@@ -86,7 +86,7 @@ def search_vacancies_from_hh(programming_languages):
             average_salary = None
 
         average_salaries_by_languages[programming_language] = {
-            'vacancies_found': len(all_hh_vacancies_by_specific_language),
+            'vacancies_found': hh_vacancies['found'],
             'vacancies_processed': len(estimated_rub_salaries),
             'average_salary': average_salary
         }
@@ -148,7 +148,7 @@ def search_vacancies_from_sj(programming_languages):
             average_salary = None
 
         average_salaries_by_languages[programming_language] = {
-            'vacancies_found': len(all_sj_vacancies_by_specific_language),
+            'vacancies_found': sj_vacancies['total'],
             'vacancies_processed': len(estimated_rub_salaries),
             'average_salary': average_salary
         }
@@ -187,13 +187,13 @@ def main():
         'Python', 'Java', 'JavaScript', 'Kotlin'
     ]
 
-    hh_job_statistic = search_vacancies_from_hh(programming_languages)
+    # hh_job_statistic = search_vacancies_from_hh(programming_languages)
     sj_job_statistic = search_vacancies_from_sj(programming_languages)
 
     hh_title = 'HeadHunter Moscow'
     sj_title = 'SuperJob Moscow'
 
-    print(create_table(hh_job_statistic, hh_title))
+    # print(create_table(hh_job_statistic, hh_title))
     print(create_table(sj_job_statistic, sj_title))
 
 
