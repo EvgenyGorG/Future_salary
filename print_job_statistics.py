@@ -1,6 +1,5 @@
 import os
 
-
 import requests
 from dotenv import load_dotenv
 from terminaltables import AsciiTable
@@ -38,10 +37,11 @@ def predict_rub_salary_sj(vacancy):
 
 
 def search_vacancies_from_hh(programming_languages):
-    hh_vacancies_url = 'https://api.hh.ru/vacancies'
-    profession_developer = 96
     moscow_city = 1
-    one_month = 30
+    number_of_days = 30
+    profession = 96
+
+    hh_vacancies_url = 'https://api.hh.ru/vacancies'
 
     average_salaries_by_languages = {}
 
@@ -53,10 +53,9 @@ def search_vacancies_from_hh(programming_languages):
 
         while page < pages:
             hh_vacancy_parameters = {
-                'professional_role': profession_developer,
+                'professional_role': profession,
                 'area': moscow_city,
-                'period': one_month,
-                'only_with_salary': True,
+                'period': number_of_days,
                 'text': f'Программист {programming_language}',
                 'page': page
             }
@@ -70,20 +69,25 @@ def search_vacancies_from_hh(programming_languages):
 
             all_hh_vacancies_by_specific_language += hh_vacancies['items']
 
-        predict_rub_salaries = []
+        estimated_rub_salaries = []
 
         for vacancy in all_hh_vacancies_by_specific_language:
-            if predict_rub_salary_hh(vacancy):
-                predict_rub_salaries.append(predict_rub_salary_hh(vacancy))
+            if not vacancy['salary']:
+                continue
 
-        if predict_rub_salaries:
-            average_salary = int(sum(predict_rub_salaries) / len(predict_rub_salaries))
+            estimated_rub_salary = predict_rub_salary_hh(vacancy)
+
+            if estimated_rub_salary:
+                estimated_rub_salaries.append(estimated_rub_salary)
+
+        if estimated_rub_salaries:
+            average_salary = int(sum(estimated_rub_salaries) / len(estimated_rub_salaries))
         else:
             average_salary = None
 
         average_salaries_by_languages[programming_language] = {
             'vacancies_found': len(all_hh_vacancies_by_specific_language),
-            'vacancies_processed': len(predict_rub_salaries),
+            'vacancies_processed': len(estimated_rub_salaries),
             'average_salary': average_salary
         }
 
@@ -91,12 +95,12 @@ def search_vacancies_from_hh(programming_languages):
 
 
 def search_vacancies_from_sj(programming_languages):
+    moscow_city = 4
+    number_of_days = 30
+    profession = 48
+
     load_dotenv()
     super_job_secret_key = os.environ['SUPER_JOB_SECRET_KEY']
-
-    profession_developer = 48
-    moscow_city = 4
-    one_month = 30
 
     super_job_api_url = 'https://api.superjob.ru/2.0/vacancies'
 
@@ -115,8 +119,8 @@ def search_vacancies_from_sj(programming_languages):
         while more:
             sj_vacancy_params = {
                 'town': moscow_city,
-                'catalogues': profession_developer,
-                'period': one_month,
+                'catalogues': profession,
+                'period': number_of_days,
                 'page': page,
                 'keyword': programming_language
             }
@@ -130,20 +134,22 @@ def search_vacancies_from_sj(programming_languages):
 
             all_sj_vacancies_by_specific_language += sj_vacancies['objects']
 
-        predict_rub_salaries = []
+        estimated_rub_salaries = []
 
         for vacancy in all_sj_vacancies_by_specific_language:
-            if predict_rub_salary_sj(vacancy):
-                predict_rub_salaries.append(predict_rub_salary_sj(vacancy))
+            estimated_rub_salary = predict_rub_salary_sj(vacancy)
 
-        if predict_rub_salaries:
-            average_salary = int(sum(predict_rub_salaries) / len(predict_rub_salaries))
+            if estimated_rub_salary:
+                estimated_rub_salaries.append(estimated_rub_salary)
+
+        if estimated_rub_salaries:
+            average_salary = int(sum(estimated_rub_salaries) / len(estimated_rub_salaries))
         else:
             average_salary = None
 
         average_salaries_by_languages[programming_language] = {
             'vacancies_found': len(all_sj_vacancies_by_specific_language),
-            'vacancies_processed': len(predict_rub_salaries),
+            'vacancies_processed': len(estimated_rub_salaries),
             'average_salary': average_salary
         }
 
