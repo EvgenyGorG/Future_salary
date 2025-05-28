@@ -69,25 +69,25 @@ def search_vacancies_from_hh(programming_languages):
 
             all_hh_vacancies_by_specific_language += hh_vacancies['items']
 
-        predict_rub_salaries = []
+        estimated_rub_salaries = []
 
         for vacancy in all_hh_vacancies_by_specific_language:
             if not vacancy['salary']:
                 continue
 
-            predict_rub_salary = predict_rub_salary_hh(vacancy)
+            estimated_rub_salary = predict_rub_salary_hh(vacancy)
 
-            if predict_rub_salary:
-                predict_rub_salaries.append(predict_rub_salary)
+            if estimated_rub_salary:
+                estimated_rub_salaries.append(estimated_rub_salary)
 
-        if predict_rub_salaries:
-            average_salary = int(sum(predict_rub_salaries) / len(predict_rub_salaries))
+        if estimated_rub_salaries:
+            average_salary = int(sum(estimated_rub_salaries) / len(estimated_rub_salaries))
         else:
             average_salary = None
 
         average_salaries_by_languages[programming_language] = {
             'vacancies_found': len(all_hh_vacancies_by_specific_language),
-            'vacancies_processed': len(predict_rub_salaries),
+            'vacancies_processed': len(estimated_rub_salaries),
             'average_salary': average_salary
         }
 
@@ -134,22 +134,22 @@ def search_vacancies_from_sj(programming_languages):
 
             all_sj_vacancies_by_specific_language += sj_vacancies['objects']
 
-        predict_rub_salaries = []
+        estimated_rub_salaries = []
 
         for vacancy in all_sj_vacancies_by_specific_language:
-            predict_rub_salary = predict_rub_salary_sj(vacancy)
+            estimated_rub_salary = predict_rub_salary_sj(vacancy)
 
-            if predict_rub_salary:
-                predict_rub_salaries.append(predict_rub_salary)
+            if estimated_rub_salary:
+                estimated_rub_salaries.append(estimated_rub_salary)
 
-        if predict_rub_salaries:
-            average_salary = int(sum(predict_rub_salaries) / len(predict_rub_salaries))
+        if estimated_rub_salaries:
+            average_salary = int(sum(estimated_rub_salaries) / len(estimated_rub_salaries))
         else:
             average_salary = None
 
         average_salaries_by_languages[programming_language] = {
             'vacancies_found': len(all_sj_vacancies_by_specific_language),
-            'vacancies_processed': len(predict_rub_salaries),
+            'vacancies_processed': len(estimated_rub_salaries),
             'average_salary': average_salary
         }
 
