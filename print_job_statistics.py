@@ -72,8 +72,13 @@ def search_vacancies_from_hh(programming_languages):
         predict_rub_salaries = []
 
         for vacancy in all_hh_vacancies_by_specific_language:
-            if vacancy['salary'] and predict_rub_salary_hh(vacancy):
-                predict_rub_salaries.append(predict_rub_salary_hh(vacancy))
+            if not vacancy['salary']:
+                continue
+
+            predict_rub_salary = predict_rub_salary_hh(vacancy)
+
+            if predict_rub_salary:
+                predict_rub_salaries.append(predict_rub_salary)
 
         if predict_rub_salaries:
             average_salary = int(sum(predict_rub_salaries) / len(predict_rub_salaries))
@@ -132,8 +137,10 @@ def search_vacancies_from_sj(programming_languages):
         predict_rub_salaries = []
 
         for vacancy in all_sj_vacancies_by_specific_language:
-            if predict_rub_salary_sj(vacancy):
-                predict_rub_salaries.append(predict_rub_salary_sj(vacancy))
+            predict_rub_salary = predict_rub_salary_sj(vacancy)
+
+            if predict_rub_salary:
+                predict_rub_salaries.append(predict_rub_salary)
 
         if predict_rub_salaries:
             average_salary = int(sum(predict_rub_salaries) / len(predict_rub_salaries))
