@@ -163,13 +163,13 @@ def create_table(job_statistic, title):
         )
     ]
 
-    for language in job_statistic:
+    for language, statistic in job_statistic.items():
         table_data.append(
             (
                 language,
-                job_statistic[language]['vacancies_found'],
-                job_statistic[language]['vacancies_processed'],
-                job_statistic[language]['average_salary']
+                statistic['vacancies_found'],
+                statistic['vacancies_processed'],
+                statistic['average_salary']
             )
         )
 
