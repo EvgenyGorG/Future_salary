@@ -36,7 +36,7 @@ def predict_rub_salary_sj(vacancy):
         return predict_rub_salary(salary_from, salary_to)
 
 
-def search_vacancies_from_hh(programming_languages):
+def search_vacancies_from_hh(hh_ru_token, programming_languages):
     moscow_city = 1
     number_of_days = 30
     profession = 96
@@ -52,6 +52,10 @@ def search_vacancies_from_hh(programming_languages):
         all_hh_vacancies_by_specific_language = []
 
         while page < pages:
+            headers = {
+                "Authorization": f"Bearer {hh_ru_token}"
+            }
+
             hh_vacancy_parameters = {
                 'professional_role': profession,
                 'area': moscow_city,
@@ -60,7 +64,7 @@ def search_vacancies_from_hh(programming_languages):
                 'page': page
             }
 
-            hh_vacancies = requests.get(hh_vacancies_url, params=hh_vacancy_parameters)
+            hh_vacancies = requests.get(hh_vacancies_url, headers=headers, params=hh_vacancy_parameters)
             hh_vacancies.raise_for_status()
             hh_vacancies = hh_vacancies.json()
 
@@ -181,13 +185,14 @@ def create_table(job_statistic, title):
 def main():
     load_dotenv()
     super_job_secret_key = os.environ['SUPER_JOB_SECRET_KEY']
+    hh_ru_token = os.environ['HH_RU_TOKEN']
 
     programming_languages = [
         'GO', 'C', 'C#', 'C++', 'PHP', 'Ruby',
         'Python', 'Java', 'JavaScript', 'Kotlin'
     ]
 
-    hh_job_statistic = search_vacancies_from_hh(programming_languages)
+    hh_job_statistic = search_vacancies_from_hh(hh_ru_token, programming_languages)
     sj_job_statistic = search_vacancies_from_sj(super_job_secret_key, programming_languages)
 
     hh_title = 'HeadHunter Moscow'
