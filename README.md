@@ -25,11 +25,13 @@ pip install -r requirements.txt
 Рекомендуется использовать [virtualenv/venv](https://docs.python.org/3/library/venv.html)
 для изоляции проекта.
 
-Необходимо создать `.env` файл, для хранения переменной окружения,
-которая будет использоваться в программе. В файле должна быть переменная
-`SUPER_JOB_SECRET_KEY`, которая хранит секретный ключ вашего приложения. Чтобы зарегистрировать
-приложение и получить секретный ключ следуйте инструкции
-[SuperJob API Docs](https://api.superjob.ru/).
+Необходимо создать `.env` файл, для хранения переменных окружения,
+которые будет использоваться в программе. В файле должны быть переменные
+`SUPER_JOB_SECRET_KEY` и `HH_RU_TOKEN`. 
+`SUPER_JOB_SECRET_KEY` - хранит секретный ключ вашего приложения. Чтобы зарегистрировать
+приложение и получить секретный ключ следуйте инструкции [SuperJob API Docs](https://api.superjob.ru/).
+`HH_RU_TOKEN` - хранит access_token вашего приложения, чтобы получить его, следуйте 
+инструкции [HH API Авторизация приложения](https://api.hh.ru/openapi/redoc#tag/Avtorizaciya-prilozheniya).
 
 ### Пример запуска:
 ```
@@ -72,12 +74,13 @@ pip install -r requirements.txt
 It is recommended to use [virtualenv/venv](https://docs.python.org/3/library/venv.html)
 for project isolation.
 
-You need to create a `.env` file to store the environment variable
-that will be used in the program. The file should contain
-the variable `SUPER_JOB_SECRET_KEY`, which stores your application's
-secret key. To register your application and obtain a secret key,
-follow the instructions in the
-[SuperJob API Docs](https://api.superjob.ru/).
+It is necessary to create a `.env` file to store the environment variables
+that will be used in the program. The file must contain variables
+`SUPER_JOB_SECRET_KEY` and `HH_RU_TOKEN`. 
+`SUPER_JOB_SECRET_KEY` - stores the secret key of your application. To register
+the application and get the secret key, follow the instructions in [SuperJob API Docs](https://api.superjob.ru/).
+`HH_RU_TOKEN` - stores the access_token of your application. To get it, follow
+the instructions [HH API Application Authorization](https://api.hh.ru/openapi/redoc#tag/Avtorizaciya-prilozheniya).
 
 ### Example of Running:
 ```
