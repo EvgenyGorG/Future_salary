@@ -94,13 +94,10 @@ def search_vacancies_from_hh(programming_languages):
     return average_salaries_by_languages
 
 
-def search_vacancies_from_sj(programming_languages):
+def search_vacancies_from_sj(super_job_secret_key, programming_languages):
     moscow_city = 4
     number_of_days = 30
     profession = 48
-
-    load_dotenv()
-    super_job_secret_key = os.environ['SUPER_JOB_SECRET_KEY']
 
     super_job_api_url = 'https://api.superjob.ru/2.0/vacancies'
 
@@ -182,18 +179,21 @@ def create_table(job_statistic, title):
 
 
 def main():
+    load_dotenv()
+    super_job_secret_key = os.environ['SUPER_JOB_SECRET_KEY']
+
     programming_languages = [
         'GO', 'C', 'C#', 'C++', 'PHP', 'Ruby',
         'Python', 'Java', 'JavaScript', 'Kotlin'
     ]
 
-    # hh_job_statistic = search_vacancies_from_hh(programming_languages)
-    sj_job_statistic = search_vacancies_from_sj(programming_languages)
+    hh_job_statistic = search_vacancies_from_hh(programming_languages)
+    sj_job_statistic = search_vacancies_from_sj(super_job_secret_key, programming_languages)
 
     hh_title = 'HeadHunter Moscow'
     sj_title = 'SuperJob Moscow'
 
-    # print(create_table(hh_job_statistic, hh_title))
+    print(create_table(hh_job_statistic, hh_title))
     print(create_table(sj_job_statistic, sj_title))
 
 
