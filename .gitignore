@@ -22,3 +22,6 @@ dist/
 
 # Игнорируем файлы с секретами
 .env
+
+# Windows
+Thumbs.db
